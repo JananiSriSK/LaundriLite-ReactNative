@@ -7,7 +7,7 @@ import coupon2 from "../../../assets/Coupon211.jpg";
 import coupon3 from "../../../assets/Coupon3w.jpg";
 
 const SwiperView = () => {
-    const router = useRouter();
+  const router = useRouter();
   return (
     <View style={styles.swiperContainer}>
       <Swiper autoplay showsPagination={true} loop>
