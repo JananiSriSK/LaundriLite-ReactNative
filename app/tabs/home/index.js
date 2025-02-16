@@ -109,6 +109,9 @@ const index = () => {
 
       {/* Swiper View */}
       <View style={styles.container}>
+        {/* <Pressable onPress={() => router.push("/tabs/home/address")}>
+          
+        </Pressable> */}
         <SwiperView />
       </View>
 
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
   bookNowButton: {
     backgroundColor: "#d9f6b1",
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingVertical: 8,
     borderRadius: 4,
   },
   orderSection: {
@@ -260,7 +263,7 @@ const styles = StyleSheet.create({
   addItemButton: {
     backgroundColor: "#d9f6b1",
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     alignItems: "center",
     borderRadius: 5,
     marginTop: 8,

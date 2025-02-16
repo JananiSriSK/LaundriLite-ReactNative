@@ -5,6 +5,8 @@ export default function Layout(params) {
     <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="address" />
+        <Stack.Screen name="add" />
       </Stack>
     </>
   );

@@ -1,16 +1,81 @@
+// import React, { useState } from "react";
+// import { View, Image, StyleSheet } from "react-native";
+// import Swiper from "react-native-swiper";
+// import coupon1 from "../../../assets/Coupon1111.png";
+// import coupon2 from "../../../assets/Coupon211.jpg";
+// import coupon3 from "../../../assets/Coupon3w.jpg";
+
+// const SwiperView = () => {
+//   const [index, setIndex] = useState(0); // Track current slide index
+
+//   return (
+//     <View style={styles.swiperContainer}>
+//       <Swiper
+//         autoplay
+//         autoplayTimeout={3} // Auto-slide every 3 seconds
+//         showsPagination={true}
+//         loop={true}
+//         index={index} // Allow manual swipe control
+//         onIndexChanged={(i) => setIndex(i)} // Detect manual swipes
+//         horizontal={true} // Ensure left-right swiping
+//         showsButtons={false} // Set to true if you want navigation arrows
+//       >
+//         <View style={styles.slide}>
+//           <Image source={coupon1} style={styles.image} />
+//         </View>
+//         <View style={styles.slide}>
+//           <Image source={coupon3} style={styles.image} />
+//         </View>
+//         <View style={styles.slide}>
+//           <Image source={coupon2} style={styles.image} />
+//         </View>
+//       </Swiper>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   swiperContainer: {
+//     height: 200,
+//     width: 340,
+//     borderRadius: 10,
+//     overflow: "hidden",
+//     flex: 1, // ✅ Allow touch gestures
+//   },
+//   slide: {
+//     backgroundColor: "white",
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//   },
+//   image: {
+//     width: "100%",
+//     height: "100%",
+//     resizeMode: "cover",
+//   },
+// });
+
+// export default SwiperView;
 import React from "react";
 import { View, Image, StyleSheet } from "react-native";
 import Swiper from "react-native-swiper";
-import { useRouter } from "expo-router";
 import coupon1 from "../../../assets/Coupon1111.png";
 import coupon2 from "../../../assets/Coupon211.jpg";
 import coupon3 from "../../../assets/Coupon3w.jpg";
 
 const SwiperView = () => {
-  const router = useRouter();
   return (
     <View style={styles.swiperContainer}>
-      <Swiper autoplay showsPagination={true} loop>
+      <Swiper
+        autoplay
+        autoplayTimeout={3}
+        showsPagination={true}
+        activeDotColor="#b1b4e6"
+        loop={true}
+        horizontal={true}
+        scrollEnabled={true}
+        showsButtons={false}
+      >
         <View style={styles.slide}>
           <Image source={coupon1} style={styles.image} />
         </View>
@@ -33,10 +98,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   slide: {
-    backgroundColor: "white",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   image: {
     width: "100%",
