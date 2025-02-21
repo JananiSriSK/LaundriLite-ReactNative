@@ -154,7 +154,10 @@ const index = () => {
           <Text style={styles.slotText}>
             Order Within 15 mins to catch this pickUp Slot
           </Text>
-          <Pressable style={styles.addItemButton}>
+          <Pressable
+            onPress={() => router.push("/tabs/basket/select")}
+            style={styles.addItemButton}
+          >
             <Text>ADD ITEMS</Text>
           </Pressable>
         </View>

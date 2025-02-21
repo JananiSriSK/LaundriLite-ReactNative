@@ -12,8 +12,10 @@ import { Octicons, AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import dryclean from "../../../assets/dryclean.png";
 import DressItem from "../../../components/dressItem";
+import { useRouter } from "expo-router";
 
 const select = () => {
+  const router = useRouter();
   const [option, setOption] = useState("Men");
   //const dispatch = useDispatch();
   const [selectedOption, setSelectedOption] = useState("Wash + fold");
@@ -139,6 +141,34 @@ const select = () => {
     },
   ];
 
+  const shoesData = [
+    {
+      id: "34",
+      image: "https://cdn-icons-png.flaticon.com/128/11543/11543825.png",
+      name: "Home Apron",
+      price: 75,
+    },
+    {
+      id: "35",
+      image: "https://cdn-icons-png.flaticon.com/128/5696/5696987.png",
+      name: "Home Bath Towel",
+      price: 80,
+    },
+
+    {
+      id: "36",
+      image: "https://cdn-icons-png.flaticon.com/128/1026/1026562.png",
+      name: "Home Mats",
+      price: 60,
+    },
+    {
+      id: "37",
+      image: "https://cdn-icons-png.flaticon.com/128/9096/9096915.png",
+      name: "Home Pillow covers",
+      price: 85,
+    },
+  ];
+
   return (
     <ScrollView>
       <View style={{ backgroundColor: "#dbddff", padding: 20 }}>
@@ -151,6 +181,7 @@ const select = () => {
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Pressable
+              onPress={() => router.push("/tabs/basket/")}
               style={{
                 width: 30,
                 height: 30,
@@ -162,10 +193,10 @@ const select = () => {
             </Pressable>
             <Text style={{ fontSize: 18, fontWeight: 500 }}>Laundry list</Text>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          {/* <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Feather name="search" size={24} color="black" />
             <Octicons name="three-bars" size={24} color="black" />
-          </View>
+          </View> */}
         </View>
       </View>
 
@@ -270,100 +301,122 @@ const select = () => {
         </Pressable>
       </View>
 
-      <View>
-        <View
-          style={{
-            marginVertical: 20,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            justifyContent: "space-around",
-          }}
-        >
-          <Pressable
-            onPress={() => setOption("Men")}
+      <ScrollView horizontal>
+        <View>
+          <View
             style={{
-              padding: 10,
-              backgroundColor: option == "Men" ? "#0066b2" : "white",
-              width: 60,
-              borderRadius: 4,
+              marginVertical: 20,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+              justifyContent: "space-around",
             }}
           >
-            <Text
+            <Pressable
+              onPress={() => setOption("Men")}
               style={{
-                fontSize: 14,
-                fontWeight: "500",
-                textAlign: "center",
-                color: option == "Men" ? "white" : "gray",
+                padding: 10,
+                backgroundColor: option == "Men" ? "#0066b2" : "white",
+                width: 60,
+                borderRadius: 4,
               }}
             >
-              Men
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setOption("Women")}
-            style={{
-              padding: 10,
-              backgroundColor: "white",
-              width: 70,
-              backgroundColor: option == "Women" ? "#0066b2" : "white",
-              borderRadius: 4,
-            }}
-          >
-            <Text
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  color: option == "Men" ? "white" : "gray",
+                }}
+              >
+                Men
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setOption("Women")}
               style={{
-                fontSize: 14,
-                fontWeight: "500",
-                textAlign: "center",
-                color: option == "Women" ? "white" : "gray",
+                padding: 10,
+                backgroundColor: "white",
+                width: 70,
+                backgroundColor: option == "Women" ? "#0066b2" : "white",
+                borderRadius: 4,
               }}
             >
-              Women
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setOption("Kids")}
-            style={{
-              padding: 10,
-              backgroundColor: "white",
-              width: 60,
-              backgroundColor: option == "Kids" ? "#0066b2" : "white",
-              borderRadius: 4,
-            }}
-          >
-            <Text
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  color: option == "Women" ? "white" : "gray",
+                }}
+              >
+                Women
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setOption("Kids")}
               style={{
-                fontSize: 14,
-                fontWeight: "500",
-                textAlign: "center",
-                color: option == "Kids" ? "white" : "gray",
+                padding: 10,
+                backgroundColor: "white",
+                width: 60,
+                backgroundColor: option == "Kids" ? "#0066b2" : "white",
+                borderRadius: 4,
               }}
             >
-              Kids
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setOption("Household")}
-            style={{
-              padding: 10,
-              backgroundColor: "white",
-              backgroundColor: option == "Household" ? "#0066b2" : "white",
-              borderRadius: 4,
-            }}
-          >
-            <Text
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  color: option == "Kids" ? "white" : "gray",
+                }}
+              >
+                Kids
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setOption("Household")}
               style={{
-                fontSize: 14,
-                fontWeight: "500",
-                textAlign: "center",
-                color: option == "Household" ? "white" : "gray",
+                padding: 10,
+                backgroundColor: "white",
+                backgroundColor: option == "Household" ? "#0066b2" : "white",
+                borderRadius: 4,
               }}
             >
-              Household
-            </Text>
-          </Pressable>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  color: option == "Household" ? "white" : "gray",
+                }}
+              >
+                Household
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setOption("Shoes")}
+              style={{
+                padding: 10,
+                backgroundColor: "white",
+                backgroundColor: option == "Shoes" ? "#0066b2" : "white",
+                borderRadius: 4,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  color: option == "Shoes" ? "white" : "gray",
+                }}
+              >
+                Shoes
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      </View>
+      </ScrollView>
 
       <View style={{ marginHorizontal: 10 }}>
         {option == "Men" && (
@@ -472,6 +525,51 @@ const select = () => {
         {option == "Household" && (
           <View>
             {houseData?.map((item, index) => (
+              <Pressable
+                key={index}
+                style={{
+                  padding: 10,
+                  backgroundColor: "white",
+                  marginVertical: 13,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 12,
+                }}
+              >
+                <View>
+                  <Image
+                    style={{ width: 40, height: 40 }}
+                    source={{ uri: item?.image }}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ fontSize: 15, fontWeight: "500" }}>
+                    {item?.name}
+                  </Text>
+                  <Text style={{ marginTop: 3 }}>
+                    ₹{" "}
+                    {selectedOption == "Wash + Iron"
+                      ? item.price + 20
+                      : selectedOption == "Steam Iron"
+                      ? item.price + 35
+                      : selectedOption == "Dry Clean"
+                      ? item.price + 45
+                      : item.price}
+                  </Text>
+                </View>
+                <Pressable>
+                  <AntDesign name="pluscircleo" size={24} color="grey" />
+                </Pressable>
+              </Pressable>
+            ))}
+          </View>
+        )}
+      </View>
+
+      <View style={{ marginHorizontal: 10 }}>
+        {option == "Shoes" && (
+          <View>
+            {shoesData?.map((item, index) => (
               <Pressable
                 key={index}
                 style={{

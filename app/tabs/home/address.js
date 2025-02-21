@@ -285,23 +285,21 @@ const address = () => {
             alignItems: "center",
           }}
         >
-          <Ionicons name="chevron-back" size={24} color="black" />
+          <Pressable
+            onPress={() => router.push("/tabs/home/")}
+            style={{
+              width: 30,
+              height: 30,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </Pressable>
         </View>
         <Text style={{ flex: 1, fontSize: 17, fontWeight: "500" }}>
           Choose your address
         </Text>
-        <View
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 18,
-
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Entypo name="cross" size={24} color="black" />
-        </View>
       </View>
       <View
         style={{
