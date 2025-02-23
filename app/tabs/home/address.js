@@ -482,7 +482,8 @@ const address = () => {
                       </View>
                       <Text>{item.addressLine}</Text>
                       {selectedAdress === item && (
-                      <FontAwesome name="flag-o" size={24} color="black" />)}
+                        <FontAwesome name="flag-o" size={24} color="black" />
+                      )}
                     </View>
 
                     <Text

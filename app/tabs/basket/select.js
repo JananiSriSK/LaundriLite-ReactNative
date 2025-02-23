@@ -538,7 +538,7 @@ const select = () => {
           </Pressable>
         </View>
 
-        <ScrollView horizontal>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View>
             <View
               style={{
