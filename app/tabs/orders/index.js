@@ -101,7 +101,7 @@ const Index = () => {
           >
             <View
               style={{
-                backgroundColor: "#d9f6b1",
+                backgroundColor: "#e2f7c3",
                 padding: 10,
                 flexDirection: "row",
                 alignItems: "center",
@@ -119,8 +119,8 @@ const Index = () => {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: 15,
-                    fontWeight: "500",
+                    fontSize: 14,
+                    fontWeight: "400",
                     marginTop: 3,
                   }}
                 >
@@ -137,8 +137,8 @@ const Index = () => {
                 <Text
                   style={{
                     color: "black",
-                    fontSize: 15,
-                    fontWeight: "500",
+                    fontSize: 14,
+                    fontWeight: "400",
                     marginTop: 4,
                   }}
                 >
