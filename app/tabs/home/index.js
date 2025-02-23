@@ -95,9 +95,7 @@ const index = () => {
                 onPress={() => router.push("/tabs/home/address")}
                 style={styles.bookNowButton}
               >
-                <Text style={{ fontSize: 13, fontWeight: "400" }}>
-                  BOOK NOW
-                </Text>
+                <Text style={{ fontSize: 13, fontWeight: "00" }}>BOOK NOW</Text>
               </Pressable>
               <View style={{ width: 120 }}>
                 <MaterialCommunityIcons name="truck" size={24} color="black" />
@@ -109,9 +107,6 @@ const index = () => {
 
       {/* Swiper View */}
       <View style={styles.container}>
-        {/* <Pressable onPress={() => router.push("/tabs/home/address")}>
-          
-        </Pressable> */}
         <SwiperView />
       </View>
 
@@ -196,8 +191,8 @@ const styles = StyleSheet.create({
   },
   bookNowButton: {
     backgroundColor: "#d9f6b1",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderRadius: 4,
   },
   orderSection: {
