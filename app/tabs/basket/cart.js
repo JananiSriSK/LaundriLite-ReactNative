@@ -38,7 +38,7 @@ const cart = () => {
           }}
         >
           <Pressable
-            onPress={() => router.push("/basket/select/")}
+            onPress={() => router.push("/tabs/basket/select")}
             style={{
               width: 30,
               height: 30,
