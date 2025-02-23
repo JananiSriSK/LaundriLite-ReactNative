@@ -9,8 +9,11 @@ import {
 import React from "react";
 import { useSelector } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 const cart = () => {
+  const router = useRouter();
   const cart = useSelector((state) => state.cart.cart);
   const total = cart
     ?.map((item) => item.item.price * item.item.quantity)
@@ -20,27 +23,58 @@ const cart = () => {
       <View
         style={{
           backgroundColor: "#dbddff",
+          padding: 20,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <View
+          style={{
+            width: 36,
+            height: 36,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Pressable
+            onPress={() => router.push("/basket/select/")}
+            style={{
+              width: 30,
+              height: 30,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </Pressable>
+        </View>
+        <Text style={{ flex: 1, fontSize: 18, fontWeight: "500" }}>
+          Cart Items
+        </Text>
+      </View>
+      <View
+        style={{
+          backgroundColor: "transparent",
           padding: 12,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontSize: 16, fontWeight: "500", color: "black" }}>
+        <Text style={{ fontSize: 17, fontWeight: "500", color: "black" }}>
           Basket Total
         </Text>
 
         <View>
           <Text style={{ fontSize: 16, fontWeight: "500", color: "black" }}>
-            Rs {total}
+            ₹ {total}
           </Text>
           <Text style={{ fontSize: 16, fontWeight: "500", color: "black" }}>
             for {cart.length} items
           </Text>
         </View>
       </View>
-
-      <Text style={{ padding: 10 }}>Cart Items</Text>
 
       <View style={{ marginHorizontal: 12 }}>
         {cart?.map((item, index) => (
@@ -63,8 +97,17 @@ const cart = () => {
             </View>
 
             <View style={{ flex: 1 }}>
-              <Text>{item?.item.name}</Text>
-              <Text>{item?.item.price * item?.item.quantity}</Text>
+              <Text style={{ fontSize: 14, fontWeight: "500" }}>
+                {item?.item.name}
+              </Text>
+              <Text>
+                {"₹ "}
+                {item?.item.price}
+                {" * "}
+                {item?.item.quantity}
+                {" items = ₹"}
+                {item?.item.price * item?.item.quantity}
+              </Text>
             </View>
 
             {/* <Pressable>
