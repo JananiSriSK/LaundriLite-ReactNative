@@ -34,26 +34,32 @@ const select = () => {
     {
       id: "0",
       image: "https://cdn-icons-png.flaticon.com/128/776/776623.png",
-      name: "Pant ",
+      name: "Pant",
       price: 75,
+    },
+    {
+      id: "8",
+      image: "https://cdn-icons-png.flaticon.com/128/919/919439.png",
+      name: "Shorts",
+      price: 85,
     },
     {
       id: "1",
       image: "https://cdn-icons-png.flaticon.com/128/6669/6669281.png",
-      name: "Dhoti ",
+      name: "Dhoti",
       price: 80,
     },
 
     {
       id: "2",
-      image: "https://cdn-icons-png.flaticon.com/128/892/892458.png",
-      name: "Half T-Shirt ",
+      image: "https://cdn-icons-png.flaticon.com/128/2806/2806102.png",
+      name: "Half T-Shirt",
       price: 60,
     },
     {
       id: "3",
-      image: "https://cdn-icons-png.flaticon.com/128/3531/3531849.png",
-      name: "Shirt ",
+      image: "https://cdn-icons-png.flaticon.com/128/7378/7378841.png",
+      name: "Shirt",
       price: 85,
     },
     {
@@ -70,21 +76,15 @@ const select = () => {
     },
     {
       id: "6",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345399.png",
+      image: "https://cdn-icons-png.flaticon.com/128/3827/3827006.png",
       name: "Sweater",
       price: 90,
     },
     {
       id: "7",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345400.png",
+      image: "https://cdn-icons-png.flaticon.com/128/2806/2806051.png",
       name: "Jacket",
       price: 120,
-    },
-    {
-      id: "8",
-      image: "https://cdn-icons-png.flaticon.com/128/2405/2405604.png",
-      name: "Men Shorts",
-      price: 85,
     },
   ];
 
@@ -95,16 +95,10 @@ const select = () => {
       name: "Jeans",
       price: 75,
     },
-    {
-      id: "11",
-      image: "https://cdn-icons-png.flaticon.com/128/6183/6183080.png",
-      name: "Kurta",
-      price: 80,
-    },
 
     {
       id: "12",
-      image: "https://cdn-icons-png.flaticon.com/128/5980/5980963.png",
+      image: "https://cdn-icons-png.flaticon.com/128/5258/5258076.png",
       name: "Sweatshirt",
       price: 60,
     },
@@ -121,32 +115,38 @@ const select = () => {
       price: 85,
     },
     {
+      id: "11",
+      image: "https://cdn-icons-png.flaticon.com/128/17206/17206061.png",
+      name: "Kurta",
+      price: 80,
+    },
+    {
       id: "15",
-      image: "https://cdn-icons-png.flaticon.com/128/8491/8491258.png",
+      image: "https://cdn-icons-png.flaticon.com/128/3515/3515854.png",
       name: "Tops",
       price: 85,
     },
     {
       id: "16",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345397.png",
+      image: "https://cdn-icons-png.flaticon.com/128/17981/17981822.png",
       name: "Saree",
       price: 100,
     },
     {
       id: "17",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345398.png",
-      name: "Blouse",
-      price: 70,
+      image: "https://cdn-icons-png.flaticon.com/128/2093/2093930.png",
+      name: "Jumpsuit",
+      price: 100,
     },
     {
       id: "18",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345399.png",
+      image: "https://cdn-icons-png.flaticon.com/128/1774/1774825.png",
       name: "Skirt",
       price: 90,
     },
     {
       id: "19",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345400.png",
+      image: "https://cdn-icons-png.flaticon.com/128/3751/3751538.png",
       name: "Dress",
       price: 110,
     },
@@ -193,56 +193,56 @@ const select = () => {
   const houseData = [
     {
       id: "30",
-      image: "https://cdn-icons-png.flaticon.com/128/11543/11543825.png",
+      image: "https://cdn-icons-png.flaticon.com/128/2679/2679164.png",
       name: "Apron",
       price: 75,
     },
     {
       id: "31",
-      image: "https://cdn-icons-png.flaticon.com/128/5696/5696987.png",
+      image: "https://cdn-icons-png.flaticon.com/128/6013/6013970.png",
       name: "Bath Towel",
       price: 80,
     },
 
     {
       id: "32",
-      image: "https://cdn-icons-png.flaticon.com/128/1026/1026562.png",
+      image: "https://cdn-icons-png.flaticon.com/128/3445/3445548.png",
       name: "Mats",
       price: 60,
     },
     {
       id: "33",
-      image: "https://cdn-icons-png.flaticon.com/128/9096/9096915.png",
+      image: "https://cdn-icons-png.flaticon.com/128/9752/9752725.png",
       name: "Pillow covers",
       price: 85,
     },
     {
       id: "34",
-      image: "https://cdn-icons-png.flaticon.com/128/1256/1256650.png",
+      image: "https://cdn-icons-png.flaticon.com/128/7061/7061555.png",
       name: "Bed Sheets",
       price: 150,
     },
     {
       id: "35",
-      image: "https://cdn-icons-png.flaticon.com/128/1256/1256649.png",
+      image: "https://cdn-icons-png.flaticon.com/128/3419/3419945.png",
       name: "Curtains",
       price: 200,
     },
     {
       id: "36",
-      image: "https://cdn-icons-png.flaticon.com/128/1256/1256651.png",
+      image: "https://cdn-icons-png.flaticon.com/128/1271/1271209.png",
       name: "Tablecloths",
       price: 100,
     },
     {
       id: "37",
-      image: "https://cdn-icons-png.flaticon.com/128/1256/1256652.png",
+      image: "https://cdn-icons-png.flaticon.com/128/3821/3821935.png",
       name: "Duvet Covers",
       price: 250,
     },
     {
       id: "38",
-      image: "https://cdn-icons-png.flaticon.com/128/1256/1256653.png",
+      image: "https://cdn-icons-png.flaticon.com/128/8515/8515918.png",
       name: "Cushion Covers",
       price: 90,
     },
@@ -250,109 +250,108 @@ const select = () => {
   const sportsGearData = [
     {
       id: "39",
-      image: "https://www.vecteezy.com/vector-art/353603-tie-vector-icon",
+      image: "https://cdn-icons-png.flaticon.com/128/9552/9552127.png",
       name: "Jersey/Uniform ",
       price: 85,
     },
     {
       id: "40",
-      image:
-        "https://www.vecteezy.com/vector-art/25165694-belt-vector-icon-design",
+      image: "https://cdn-icons-png.flaticon.com/128/10652/10652485.png",
       name: "Yoga Wear ",
       price: 75,
     },
     {
       id: "41",
-      image:
-        "https://www.vecteezy.com/vector-art/15110507-hosiery-icon-simple-vector-winter-sock",
-      name: "Cycling Gear ",
+      image: "https://cdn-icons-png.flaticon.com/128/1576/1576070.png",
+      name: "Cycling Wear ",
       price: 95,
     },
     {
       id: "42",
-      image: "https://www.vecteezy.com/vector-art/380453-slippers-vector-icon",
-      name: "Hiking Apparel ",
+      image: "https://cdn-icons-png.flaticon.com/128/1974/1974052.png",
+      name: "Hiking Apparel",
       price: 110,
-    },
-    {
-      id: "43",
-      image: "https://www.vecteezy.com/vector-art/353603-tie-vector-icon",
-      name: "Dancewear ",
-      price: 90,
     },
   ];
 
   const delicatesData = [
     {
+      id: "43",
+      image: "https://cdn-icons-png.flaticon.com/128/7040/7040439.png",
+      name: "Lingerie",
+      price: 25,
+    },
+    {
       id: "44",
-      image:
-        "https://www.vecteezy.com/vector-art/15110507-hosiery-icon-simple-vector-winter-sock",
-      name: "Hosiery Wash",
+      image: "https://cdn-icons-png.flaticon.com/128/17246/17246158.png",
+      name: "Hosiery",
       price: 25,
     },
     {
       id: "45",
-      image:
-        "https://www.vecteezy.com/vector-art/25165694-belt-vector-icon-design",
-      name: "Shapewear Wash",
+      image: "https://cdn-icons-png.flaticon.com/128/13968/13968493.png",
+      name: "Shapewear ",
       price: 70,
     },
     {
       id: "46",
-      image: "https://www.vecteezy.com/vector-art/353603-tie-vector-icon",
-      name: "Silk Garments Wash",
+      image: "https://cdn-icons-png.flaticon.com/128/5414/5414408.png",
+      name: "Silk Garments",
       price: 150,
     },
     {
       id: "47",
-      image:
-        "https://depositphotos.com/2617995/stock-illustration-collection-of-lace-icons.html",
-      name: "Lace Clothing Wash",
+      image: "https://cdn-icons-png.flaticon.com/128/7076/7076250.png",
+      name: "Lace Clothing ",
       price: 130,
-    },
-    {
-      id: "48",
-      image: "https://www.vecteezy.com/vector-art/380453-slippers-vector-icon",
-      name: "Embellished Clothing Wash",
-      price: 160,
     },
   ];
   const accessoriesData = [
     {
+      id: "64",
+      image: "https://cdn-icons-png.flaticon.com/128/843/843877.png",
+      name: "Socks",
+      price: 50,
+    },
+    {
       id: "49",
-      image:
-        "https://www.vecteezy.com/vector-art/25165694-belt-vector-icon-design",
+      image: "https://cdn-icons-png.flaticon.com/128/2912/2912436.png",
       name: "Belt ",
       price: 50,
     },
     {
       id: "50",
-      image: "https://www.vecteezy.com/vector-art/353603-tie-vector-icon",
-      name: "Tie/Bowtie ",
+      image: "https://cdn-icons-png.flaticon.com/128/3004/3004618.png",
+      name: "Bowtie",
       price: 40,
     },
     {
       id: "51",
-      image:
-        "https://www.dreamstime.com/headbands-part-women-accessories-hand-drawn-icon-set-vector-headbands-icon-doodle-hand-drawn-outline-icon-style-image234459196",
-      name: "Headband ",
+      image: "https://cdn-icons-png.flaticon.com/128/12322/12322382.png",
+      name: "Headband",
       price: 30,
     },
     {
       id: "52",
-      image: "https://www.vecteezy.com/vector-art/380453-slippers-vector-icon",
-      name: "Handkerchief ",
+      image: "https://cdn-icons-png.flaticon.com/128/3904/3904757.png",
+      name: "Handkerchief",
       price: 15,
     },
     {
       id: "53",
-      image: "https://www.vecteezy.com/vector-art/353603-tie-vector-icon",
-      name: "Suspenders ",
+      image: "https://cdn-icons-png.flaticon.com/128/1177/1177015.png",
+      name: "Suspenders",
       price: 45,
     },
     {
       id: "62",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345401.png",
+      image: "https://cdn-icons-png.flaticon.com/128/14973/14973756.png",
+      name: "Tie",
+      price: 40,
+    },
+    {
+      id: "63",
+      image: "https://cdn-icons-png.flaticon.com/128/16832/16832225.png",
       name: "Scarf",
       price: 50,
     },
@@ -360,52 +359,46 @@ const select = () => {
   const petData = [
     {
       id: "54",
-      image: "https://example.com/images/pet_bed.png",
-      name: "Pet Bed Cleaning",
+      image: "https://cdn-icons-png.flaticon.com/128/1650/1650601.png",
+      name: "Pet Bed ",
       price: 200,
     },
     {
       id: "55",
-      image: "https://example.com/images/pet_blanket.png",
-      name: "Pet Blanket Cleaning",
+      image: "https://cdn-icons-png.flaticon.com/128/4877/4877407.png",
+      name: "Pet Blanket ",
       price: 150,
     },
     {
-      id: "56",
-      image: "https://example.com/images/pet_towel.png",
-      name: "Pet Towel Cleaning",
-      price: 100,
-    },
-    {
       id: "57",
-      image: "https://example.com/images/pet_clothing.png",
-      name: "Pet Clothing Cleaning",
+      image: "https://cdn-icons-png.flaticon.com/128/8876/8876295.png",
+      name: "Pet Clothing ",
       price: 120,
     },
     {
-      id: "58",
-      image: "https://example.com/images/pet_toy.png",
-      name: "Pet Toy Cleaning",
-      price: 80,
-    },
-    {
       id: "59",
-      image: "https://example.com/images/pet_laundry_bag.png",
-      name: "Pet Laundry Bag",
+      image: "https://cdn-icons-png.flaticon.com/128/15536/15536778.png",
+      name: "Pet Bag",
       price: 250,
     },
     {
       id: "60",
-      image: "https://example.com/images/pet_laundry_detergent.png",
-      name: "Pet-Safe Laundry Detergent",
+      image: "https://cdn-icons-png.flaticon.com/128/4310/4310635.png",
+      name: "Pet leash",
       price: 300,
     },
-    {
-      id: "61",
-      image: "https://example.com/images/pet_laundry_booster.png",
-      name: "Pet Laundry Odor Eliminator",
-      price: 350,
-    },
+    // {
+    //   id: "60",
+    //   image: "https://example.com/images/pet_laundry_detergent.png",
+    //   name: "Pet-Safe Laundry Detergent",
+    //   price: 300,
+    // },
+    // {
+    //   id: "61",
+    //   image: "https://example.com/images/pet_laundry_booster.png",
+    //   name: "Pet Laundry Odor Eliminator",
+    //   price: 350,
+    // },
   ];
 
   return (

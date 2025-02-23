@@ -1,26 +1,34 @@
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
-import { addDoc, collection, getDoc, getDocs, query } from "firebase/firestore";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  ScrollView,
+} from "react-native";
+import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
-import { Octicons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
-const index = () => {
+const Index = () => {
+  const router = useRouter();
   const userUid = auth?.currentUser.uid;
   const [orders, setOrders] = useState([]);
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const ordersCollectionRef = collection(db, "users", userUid, "orders");
-
         const ordersQuery = query(ordersCollectionRef);
-
         const querySnapshot = await getDocs(ordersQuery);
 
         const fetchedOrders = [];
-
         querySnapshot.forEach((doc) => {
           fetchedOrders.push({ id: doc.id, ...doc.data() });
         });
@@ -33,57 +41,63 @@ const index = () => {
 
     fetchOrders();
   }, []);
-  console.log("orders", orders);
+
   return (
-    <View style={{ padding: 12, height: 170, backgroundColor: "#dbddff" }}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <View>
-          <Image
-            style={{ width: 240, height: 60, resizeMode: "cover" }}
-            source={require("../../../assets/logo_final.png")}
-          />
+    <View style={{ flex: 1 }}>
+      {/* Header Section */}
+      <View style={{ backgroundColor: "#dbddff" }}>
+        <View style={{ height: 140, padding: 12 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Image
+              style={{ width: 240, height: 60, resizeMode: "cover" }}
+              source={require("../../../assets/logo_final.png")}
+            />
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 12,
+              marginTop: 12,
+            }}
+          >
+            <View
+              style={{
+                width: 30,
+                height: 30,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Ionicons
+                onPress={() => router.push("/tabs/home/")}
+                name="arrow-back"
+                size={24}
+                color="black"
+              />
+            </View>
+            <Text style={{ fontSize: 17, fontWeight: "500" }}>My Orders</Text>
+          </View>
         </View>
-        {/* <Octicons name="three-bars" size={24} color="white" /> */}
       </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 12,
-          marginTop: 12,
-        }}
-      >
-        <View
-          style={{
-            width: 30,
-            height: 30,
-            // borderRadius: 15,
-            // backgroundColor: "#C0C0C0",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </View>
-        <Text style={{fontSize:17, fontWeight:500}}>My Orders</Text>
-      </View>
-
-      <View>
-        {orders?.map((item, index) => (
+      {/* Orders List */}
+      <ScrollView contentContainerStyle={{ padding: 12 }}>
+        {orders.map((item, index) => (
           <Pressable
+            key={index}
             style={{
               marginVertical: 12,
               backgroundColor: "white",
               borderRadius: 7,
             }}
-            key={index}
           >
             <View
               style={{
@@ -104,13 +118,13 @@ const index = () => {
                 </Text>
                 <Text
                   style={{
-                    color: "balck",
+                    color: "black",
                     fontSize: 15,
                     fontWeight: "500",
                     marginTop: 3,
                   }}
                 >
-                  {item?.id}
+                  {item.id}
                 </Text>
               </View>
 
@@ -151,14 +165,14 @@ const index = () => {
                     width: 200,
                   }}
                 >
-                  {item?.address.houseNo} {item?.address.landmark}
+                  {item.address.houseNo} {item.address.landmark}
                 </Text>
                 <View style={{ marginTop: 10 }}>
                   <Text style={{ fontSize: 13, fontWeight: "600" }}>
                     PICK UP
                   </Text>
                   <Text style={{ fontSize: 15, marginTop: 4 }}>
-                    {item?.pickuptime}
+                    {item.pickuptime}
                   </Text>
                 </View>
                 <View style={{ marginTop: 10 }}>
@@ -166,7 +180,7 @@ const index = () => {
                     DELIVERY
                   </Text>
                   <Text style={{ fontSize: 15, marginTop: 4 }}>
-                    {item?.deliveryTime}
+                    {item.deliveryTime}
                   </Text>
                 </View>
                 <View style={{ marginBottom: 20 }} />
@@ -219,17 +233,15 @@ const index = () => {
                     fontWeight: "500",
                   }}
                 >
-                  FeedBack
+                  Feedback
                 </Text>
               </View>
             </View>
           </Pressable>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
-export default index;
-
-const styles = StyleSheet.create({});
+export default Index;

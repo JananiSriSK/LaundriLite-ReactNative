@@ -450,10 +450,11 @@ const address = () => {
                       backgroundColor: "white",
                       padding: 10,
                       marginVertical: 10,
-                      borderRadius: 15,
+                      borderRadius: 5,
                       borderWidth: 1,
                       borderWidth: selectedAdress === item ? 2 : 1,
-                      borderColor: "white",
+                      borderColor:
+                        selectedAdress === item ? "#0066b2" : "white",
                     }}
                   >
                     <View
@@ -479,7 +480,9 @@ const address = () => {
                           Home
                         </Text>
                       </View>
-                      <FontAwesome name="flag-o" size={24} color="black" />
+                      <Text>{item.addressLine}</Text>
+                      {selectedAdress === item && (
+                      <FontAwesome name="flag-o" size={24} color="black" />)}
                     </View>
 
                     <Text
@@ -490,7 +493,6 @@ const address = () => {
                         width: "95%",
                       }}
                     >
-        
                       {item?.houseNo} {item?.landmark}
                     </Text>
                     <Text
@@ -528,7 +530,9 @@ const address = () => {
               >
                 <Fontisto name="date" size={24} color="black" />
                 <View>
-                  <Text style={{ fontSize: 16 }}>Pick up slot</Text>
+                  <Text style={{ fontSize: 16, fontWeight: "600" }}>
+                    Pick up slot
+                  </Text>
                 </View>
               </View>
               <View>
@@ -552,7 +556,9 @@ const address = () => {
                 {renderDateButtons()}
               </View>
 
-              <Text style={{ marginHorizontal: 10 }}>Pickup Time Options</Text>
+              <Text style={{ marginHorizontal: 10, fontWeight: "600" }}>
+                Pickup Time Options
+              </Text>
               <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                 {renderPickUpTimeOptions()}
               </View>
@@ -585,9 +591,16 @@ const address = () => {
                     }}
                   >
                     <Fontisto name="date" size={24} color="black" />
-                    <Text>Pick up slot</Text>
+                    <Text style={{ fontSize: 15, fontWeight: "600" }}>
+                      Pick up slot
+                    </Text>
                   </View>
-                  <AntDesign name="edit" size={24} color="black" />
+                  <AntDesign
+                    onPress={handleBack}
+                    name="edit"
+                    size={24}
+                    color="black"
+                  />
                 </View>
 
                 <View
@@ -597,6 +610,7 @@ const address = () => {
                     justifyContent: "space-between",
                   }}
                 >
+                  {/* <Text>Date: </Text> */}
                   <View
                     style={{
                       padding: 10,
@@ -615,6 +629,7 @@ const address = () => {
                     >
                       {selectedDate.format("D")}
                     </Text>
+
                     <Text
                       style={{
                         textAlign: "center",
@@ -626,7 +641,7 @@ const address = () => {
                       {selectedDate.format("ddd")}
                     </Text>
                   </View>
-
+                  <Text>Timing: </Text>
                   <View
                     style={{
                       padding: 10,
@@ -649,6 +664,14 @@ const address = () => {
                   borderRadius: 10,
                 }}
               >
+                <View style={{ flexDirection: "row" }}>
+                  <Fontisto name="date" size={24} color="black" />
+                  <Text
+                    style={{ fontSize: 15, fontWeight: "600", marginLeft: "8" }}
+                  >
+                    Delivery slot
+                  </Text>
+                </View>
                 <View
                   style={{
                     flexDirection: "row",
@@ -662,10 +685,10 @@ const address = () => {
                   style={{
                     marginHorizontal: 10,
                     marginTop: 10,
-                    fontWeight: 400,
+                    fontWeight: 600,
                   }}
                 >
-                  Pickup Time Options
+                  Delivery Time Options
                 </Text>
                 <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   {renderTimeOptions()}
@@ -710,18 +733,25 @@ const address = () => {
 
                     <View style={{ flex: 1 }}>
                       <Text>{item?.item.name}</Text>
-                      <Text>{item?.item.price * item?.item.quantity}</Text>
+                      <Text>
+                        {"₹ "}
+                        {item?.item.price}
+                        {" * "}
+                        {item?.item.quantity}
+                        {" items = ₹"}
+                        {item?.item.price * item?.item.quantity}
+                      </Text>
                     </View>
 
-                    <Pressable>
+                    {/* <Pressable>
                       <AntDesign name="pluscircleo" size={24} color="#89CFF0" />
-                    </Pressable>
+                    </Pressable> */}
                   </Pressable>
                 ))}
               </View>
               <View
                 style={{
-                  backgroundColor: "#0066b2",
+                  backgroundColor: "#dbddff",
                   padding: 10,
                   borderBottomLeftRadius: 6,
                   borderBottomRightRadius: 6,
@@ -735,11 +765,11 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "500" }}>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
                     Total Amount
                   </Text>
-                  <Text style={{ color: "white", fontWeight: "500" }}>
-                    Rs {total}
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ {total}
                   </Text>
                 </View>
 
@@ -751,12 +781,10 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "500" }}>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
                     Promo Code
                   </Text>
-                  <Text style={{ color: "white", fontWeight: "500" }}>
-                    Rs 0
-                  </Text>
+                  <Text style={{ color: "black", fontWeight: "500" }}>₹ 0</Text>
                 </View>
 
                 <View
@@ -767,11 +795,11 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "500" }}>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
                     Delivery Charges
                   </Text>
-                  <Text style={{ color: "white", fontWeight: "500" }}>
-                    Rs 25
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ 25
                   </Text>
                 </View>
 
@@ -783,18 +811,18 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "500" }}>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
                     Total Payable
                   </Text>
-                  <Text style={{ color: "white", fontWeight: "500" }}>
-                    Rs {total + 25}
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ {total + 25}
                   </Text>
                 </View>
               </View>
 
               <View
                 style={{
-                  backgroundColor: "#0066b2",
+                  backgroundColor: "#dbddff",
                   padding: 10,
                   marginVertical: 10,
                   borderRadius: 6,
@@ -808,11 +836,11 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "500" }}>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
                     TOTAL AMOUNT
                   </Text>
-                  <Text style={{ color: "white", fontWeight: "500" }}>
-                    Rs {total}
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ {total}
                   </Text>
                 </View>
                 <View
@@ -823,11 +851,11 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "500" }}>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
                     TAXES AND CHARGES
                   </Text>
-                  <Text style={{ color: "white", fontWeight: "500" }}>
-                    Rs 150
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ 150
                   </Text>
                 </View>
 
@@ -839,11 +867,11 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
-                  <Text style={{ color: "white", fontWeight: "500" }}>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
                     TOTAL PAYABLE
                   </Text>
-                  <Text style={{ color: "white", fontWeight: "500" }}>
-                    Rs {total + 25 + 150}
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ {total + 25 + 150}
                   </Text>
                 </View>
               </View>
@@ -903,7 +931,7 @@ const address = () => {
           style={{
             backgroundColor: "#d0d0d0",
             padding: 15,
-            borderRadius: 10,
+            borderRadius: 5,
             flex: 1,
           }}
         >
@@ -914,7 +942,7 @@ const address = () => {
           style={{
             backgroundColor: "#C5E1A5",
             padding: 15,
-            borderRadius: 10,
+            borderRadius: 5,
             flex: 1,
           }}
         >
