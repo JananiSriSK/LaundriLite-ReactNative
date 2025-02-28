@@ -126,7 +126,7 @@ const cart = () => {
           marginTop: 30,
         }}
       >
-        <Pressable
+        {/* <Pressable
           style={{
             backgroundColor: "#d0d0d0",
             padding: 15,
@@ -137,8 +137,9 @@ const cart = () => {
           <Text style={{ textAlign: "center", fontWeight: "500" }}>
             Empty Basket
           </Text>
-        </Pressable>
+        </Pressable> */}
         <Pressable
+          onPress={() => router.push("/tabs/home/address")}
           style={{
             backgroundColor: "#C5E1A5",
             padding: 15,

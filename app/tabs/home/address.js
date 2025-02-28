@@ -494,7 +494,7 @@ const address = () => {
                         width: "95%",
                       }}
                     >
-                      {item?.houseNo} {item?.landmark}
+                      {item?.houseNo}, {item?.landmark},
                     </Text>
                     <Text
                       style={{
@@ -504,7 +504,7 @@ const address = () => {
                         fontWeight: "500",
                       }}
                     >
-                      Chennai {item?.postalCode}
+                      {item?.city}, {item?.postalCode}.
                     </Text>
                   </Pressable>
                 ))}

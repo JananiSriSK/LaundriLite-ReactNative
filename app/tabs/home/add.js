@@ -18,6 +18,8 @@ const add = () => {
   const [houseNo, setHouseNo] = useState("");
   const [landmark, setLandmark] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [city, setCity] = useState("");
+
   const userUid = auth?.currentUser.uid;
   const addAddress = async () => {
     try {
@@ -32,6 +34,7 @@ const add = () => {
         houseNo: houseNo,
         landmark: landmark,
         postalCode: postalCode,
+        city:city,
       });
       console.log("address added ", addresssDocRef.id);
       router.push("/tabs/home/address");
@@ -118,6 +121,8 @@ const add = () => {
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>City</Text>
 
           <TextInput
+             value={city}
+             onChangeText={(text) => setCity(text)}
             placeholder="Enter your city name"
             placeholderTextColor={"black"}
             style={{

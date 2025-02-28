@@ -165,7 +165,8 @@ const Index = () => {
                     width: 200,
                   }}
                 >
-                  {item.address.houseNo} {item.address.landmark}
+                  {item.address.houseNo},{item.address.landmark},
+                  {item.address.city}.
                 </Text>
                 <View style={{ marginTop: 10 }}>
                   <Text style={{ fontSize: 13, fontWeight: "600" }}>

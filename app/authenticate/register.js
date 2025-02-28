@@ -46,7 +46,7 @@ const register = () => {
 
         setDoc(doc(db, "users", `${myUserUid}`), {
           email: user,
-          //   password: password,
+          password: password,
         });
       });
 
@@ -162,7 +162,7 @@ const register = () => {
           </View>
         </View>
 
-        <View
+        {/* <View
           style={{
             marginTop: 12,
             flexDirection: "row",
@@ -174,7 +174,7 @@ const register = () => {
           <Text style={{ color: "#007FFF", fontWeight: "500" }}>
             Forgot Password
           </Text>
-        </View>
+        </View> */}
 
         <View style={{ marginTop: 50 }} />
 

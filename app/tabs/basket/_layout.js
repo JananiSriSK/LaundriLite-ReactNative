@@ -4,7 +4,7 @@ export default function Layout(params) {
   return (
     <>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
+        {/* <Stack.Screen name="index" /> */}
         <Stack.Screen name="select" />
         <Stack.Screen name="cart" />
       </Stack>
