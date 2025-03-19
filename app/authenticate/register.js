@@ -7,6 +7,7 @@ import {
   Image,
   KeyboardAvoidingView,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -18,47 +19,47 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { doc, setDoc } from "firebase/firestore";
-
 const register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const handleRegister = async () => {
     try {
-      // Input validation
       if (!email || !password) {
-        throw new Error("Name, email, and password are required.");
+        throw new Error("Email and password are required.");
       }
 
-      const userCredential = createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
-      ).then((userCredential) => {
-        console.log("user credential", userCredential);
-        const user = userCredential._tokenResponse.email;
-        const myUserUid = auth.currentUser.uid;
+      );
+      const user = userCredential.user;
 
-        sendEmailVerification(auth.currentUser).then((response) => {
-          console.log(response);
-          console.log("email verification sent to the user");
-        });
+      // Send email verification
+      await sendEmailVerification(user);
+      Alert.alert(
+        "Verify Your Email",
+        "A verification email has been sent. Please verify your email before logging in."
+      );
 
-        setDoc(doc(db, "users", `${myUserUid}`), {
-          email: user,
-          password: password,
-        });
+      // Store user details in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        verified: false, // Track verification status
       });
 
       setEmail("");
       setPassword("");
-      router.push("/authenticate/login");
+
+      // ✅ Redirect to login after registration (DO NOT GO TO HOME)
+      router.replace("/authenticate/login");
     } catch (error) {
-      // Handle errors
       console.error("Registration error:", error.message);
-      // You can display the error message to the user or handle it accordingly
+      Alert.alert("Registration Failed", error.message);
     }
   };
+
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}
@@ -161,20 +162,6 @@ const register = () => {
             />
           </View>
         </View>
-
-        {/* <View
-          style={{
-            marginTop: 12,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text>Keep me logged in</Text>
-          <Text style={{ color: "#007FFF", fontWeight: "500" }}>
-            Forgot Password
-          </Text>
-        </View> */}
 
         <View style={{ marginTop: 50 }} />
 

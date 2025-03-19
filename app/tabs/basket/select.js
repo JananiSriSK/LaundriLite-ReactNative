@@ -416,7 +416,7 @@ const select = () => {
               style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
             >
               <Pressable
-                onPress={() => router.push("/tabs/basket/")}
+                onPress={() => router.push("/tabs/home/")}
                 style={{
                   width: 30,
                   height: 30,
@@ -1392,11 +1392,11 @@ const select = () => {
                     <Text style={{ marginTop: 3 }}>
                       Rs{" "}
                       {selectedOption == "Wash + Iron"
-                        ? item.price + 20
+                        ? item.price + 0
                         : selectedOption == "Steam Iron"
-                        ? item.price + 35
+                        ? item.price + 0
                         : selectedOption == "Dry Clean"
-                        ? item.price + 45
+                        ? item.price + 0
                         : item.price}
                     </Text>
                   </View>

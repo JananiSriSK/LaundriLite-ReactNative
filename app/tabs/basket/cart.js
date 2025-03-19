@@ -17,6 +17,7 @@ const cart = () => {
   const cart = useSelector((state) => state.cart.cart);
   const total = cart
     ?.map((item) => item.item.price * item.item.quantity)
+    
     .reduce((prev, curr) => prev + curr, 0);
   return (
     <ScrollView>
