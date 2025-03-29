@@ -12,14 +12,17 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { auth, db } from "../../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 
 const Register = () => {
-  const [name, setName] = useState("");  // ✅ Add name state
+  const [name, setName] = useState(""); // ✅ Add name state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,7 +38,11 @@ const Register = () => {
         throw new Error("Passwords do not match.");
       }
 
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       await sendEmailVerification(user);
@@ -82,156 +89,138 @@ const Register = () => {
           />
         </View>
       </View>
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} style={{ flex: 1 }}>
-      <ScrollView 
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }} 
-        keyboardShouldPersistTaps="handled"
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={50}
+        style={{ flex: 1 }}
       >
-        <View style={{ alignItems: "center" }}>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: "bold",
-              marginTop: 50,
-              color: "black",
-            }}
-          >
-            Register your Account
-          </Text>
-        </View>
-
-        <View>
-           {/* ✅ Name Input Field */}
-           <View style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#dbddff",
-              paddingVertical: 2,
-              borderRadius: 5,
-              marginTop: 30,
-            }}>
-            <MaterialIcons style={{ marginLeft: 8 }} name="person" size={24} color="black" />
-            <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={{ alignItems: "center" }}>
+            <Text
               style={{
+                fontSize: 17,
+                fontWeight: "bold",
+                marginTop: 30,
                 color: "black",
-                width: 300,
-                marginVertical: 10,
-                fontSize: email ? 17 : 17,
               }}
-              placeholder="Enter your name"
-              placeholderTextColor={"grey"}
-            />
+            >
+              Register your Account
+            </Text>
           </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#dbddff",
-              paddingVertical: 2,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <MaterialIcons
-              style={{ marginLeft: 8 }}
-              name="email"
-              size={24}
-              color="black"
-            />
-            <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              style={{
-                color: "black",
-                width: 300,
-                marginVertical: 10,
-                fontSize: email ? 17 : 17,
-              }}
-              placeholder="Enter your email"
-              placeholderTextColor={"grey"}
-            />
+          <View>
+            
+          <View 
+            style={styles.inputField}
+            >
+              <MaterialIcons
+                style={{ marginLeft: 8 }}
+                name="person"
+                size={24}
+                color="black"
+              />
+              <TextInput
+                value={name}
+                onChangeText={(text) => setName(text)}
+                style={{
+                  color: "black",
+                  width: 300,
+                  marginVertical: 10,
+                  fontSize: email ? 17 : 17,
+                }}
+                placeholder="Enter your name"
+                placeholderTextColor={"grey"}
+              />
+            </View>
+
+            <View 
+            style={styles.inputField}
+            >
+              <MaterialIcons
+                style={{ marginLeft: 8 }}
+                name="email"
+                size={22}
+                color="black"
+              />
+              <TextInput
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                style={{
+                  color: "black",
+                  width: 300,
+                  marginVertical: 10,
+                  fontSize: email ? 17 : 17,
+                }}
+                placeholder="Enter your email"
+                placeholderTextColor={"grey"}
+              />
+            </View>
+
+            <View 
+            style={styles.inputField}
+            >
+              <Fontisto
+                name="locked"
+                size={24}
+                color="black"
+                style={{ marginLeft: 8 }}
+              />
+              <TextInput
+                secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                style={{
+                  color: "black",
+                  width: 300,
+                  marginVertical: 10,
+                  fontSize: password ? 17 : 17,
+                }}
+                placeholder="Enter your password"
+                placeholderTextColor={"grey"}
+              />
+            </View>
+
+            <View 
+            style={styles.inputField}
+            >
+              <Fontisto
+                name="locked"
+                size={22}
+                color="black"
+                style={{ marginLeft: 8 }}
+              />
+              <TextInput
+                secureTextEntry={true}
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
+                style={{
+                  color: "black",
+                  width: 300,
+                  marginVertical: 10,
+                  fontSize: confirmPassword ? 17 : 17,
+                }}
+                placeholder="Confirm your password"
+                placeholderTextColor={"grey"}
+              />
+            </View>
           </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#dbddff",
-              paddingVertical: 2,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
+          <Pressable onPress={handleRegister} style={styles.button}>
+            <Text style={styles.buttonText}>Register</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.replace("/authenticate/login")}
+            style={{ marginTop: 12 }}
           >
-            <Fontisto
-              name="locked"
-              size={24}
-              color="black"
-              style={{ marginLeft: 8 }}
-            />
-            <TextInput
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              style={{
-                color: "black",
-                width: 300,
-                marginVertical: 10,
-                fontSize: password ? 17 : 17,
-              }}
-              placeholder="Enter your password"
-              placeholderTextColor={"grey"}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              backgroundColor: "#dbddff",
-              paddingVertical: 2,
-              borderRadius: 5,
-              marginTop: 30,
-            }}
-          >
-            <Fontisto
-              name="locked"
-              size={24}
-              color="black"
-              style={{ marginLeft: 8 }}
-            />
-            <TextInput
-              secureTextEntry={true}
-              value={confirmPassword}
-              onChangeText={(text) => setConfirmPassword(text)}
-              style={{
-                color: "black",
-                width: 300,
-                marginVertical: 10,
-                fontSize: confirmPassword ? 17 : 17,
-
-              }}
-              placeholder="Confirm your password"
-              placeholderTextColor={"grey"}
-            />
-          </View>
-        </View>
-
-        <Pressable onPress={handleRegister} style={styles.button}>
-          <Text style={styles.buttonText}>Register</Text>
-        </Pressable>
-
-        <Pressable onPress={() => router.replace("/authenticate/login")} style={{ marginTop: 12 }}>
-          <Text style={{ textAlign: "center", fontSize: 15 }}>
-            Already have an account? <Text style={{ color: "#007FFF" }}>Log in</Text>
-          </Text>
-        </Pressable>
+            <Text style={{ textAlign: "center", fontSize: 15 }}>
+              Already have an account?{" "}
+              <Text style={{ color: "#007FFF" }}>Log in</Text>
+            </Text>
+          </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -241,6 +230,29 @@ const Register = () => {
 export default Register;
 
 const styles = StyleSheet.create({
-  button: { width: 200, backgroundColor: "#d9f6b1", borderRadius: 6, padding: 15,marginTop:35, alignSelf: "center" },
-  buttonText: { textAlign: "center", fontSize: 16, fontWeight: "bold", color: "black" },
+  button: {
+    width: 200,
+    backgroundColor: "#d9f6b1",
+    borderRadius: 6,
+    padding: 15,
+    marginTop: 35,
+    alignSelf: "center",
+  },
+  buttonText: {
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "black",
+  },
+
+  inputField: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
+      backgroundColor: "#dbddff",
+      paddingVertical: 1,
+      borderRadius: 5,
+      marginTop: 20,
+  },
+
 });

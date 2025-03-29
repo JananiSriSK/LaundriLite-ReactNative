@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   View,
   Image,
+  TextInput,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import React, { useState, useEffect } from "react";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,12 +18,20 @@ import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import { useRouter } from "expo-router";
-import { addDoc, collection, getDoc, getDocs, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { cleanCart } from "../../../redux/CartReducer";
 
 const address = () => {
+  const userUid = auth?.currentUser.uid;
   const router = useRouter();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
@@ -29,6 +39,7 @@ const address = () => {
     ?.map((item) => item.item.price * item.item.quantity)
     .reduce((prev, curr) => prev + curr, 0);
   const [step, setStep] = useState(1);
+  const [selectedScent, setSelectedScent] = useState("0");
   const [currentDate, setCurrentDate] = useState(moment());
   const [deliveryDate, setDeliveryDate] = useState(moment());
   const [selectedTime, setSelectedTime] = useState(null);
@@ -36,9 +47,9 @@ const address = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedDate, setSelectedDate] = useState(moment());
   const [selectedAdress, setSelectedAdress] = useState("");
-  console.log("addresses", addresses);
-  const userUid = auth?.currentUser.uid;
-  console.log("userId", userUid);
+  const [promoCode, setPromoCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [selectedAddress, setSelectedAddress] = useState(addresses[0] || null);
 
   const handleBack = () => {
     setStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
@@ -51,32 +62,8 @@ const address = () => {
     { startTime: "7:30 PM", endTime: "10:00 PM" },
   ];
 
-  useEffect(() => {
-    const fetchAddress = async () => {
-      try {
-        const addressCollectionRef = collection(
-          db,
-          "users",
-          userUid,
-          "userAddresses"
-        );
-
-        const addressQuery = query(addressCollectionRef);
-
-        const querySnapshot = await getDocs(addressQuery);
-        const addresses = [];
-
-        querySnapshot.forEach((doc) => {
-          addresses.push({ id: doc.id, ...doc.data() });
-        });
-        setAddresses(addresses);
-      } catch (error) {
-        console.log("Error", error);
-      }
-    };
-
-    fetchAddress();
-  }, []);
+  console.log("addresses", addresses);
+  console.log("userId", userUid);
 
   const handleNext = () => {
     setStep((prevStep) => {
@@ -318,6 +305,89 @@ const address = () => {
       );
     });
   };
+  const applyPromoCode = () => {
+    let discountValue = 0;
+    if (promoCode === "NEW40") {
+      discountValue = total * 0.4;
+    } else if (promoCode === "MON30") {
+      discountValue = total * 0.3;
+    } else if (promoCode === "SPCL20") {
+      discountValue = total * 0.2;
+    } else {
+      discountValue = 0; // Invalid or no promo code
+    }
+    setDiscount(discountValue);
+  };
+
+  const handleScentChange = (value) => {
+    setSelectedScent(value);
+  };
+
+  const fetchAddress = async () => {
+    try {
+      if (!userUid) return; // Prevent errors if user is not logged in
+
+      const addressCollectionRef = collection(
+        db,
+        "users",
+        userUid,
+        "userAddresses"
+      );
+      const querySnapshot = await getDocs(addressCollectionRef);
+
+      const addresses = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setAddresses(addresses);
+    } catch (error) {
+      console.log("Error fetching addresses:", error);
+    }
+  };
+
+  // Fetch addresses when component mounts
+  useEffect(() => {
+    fetchAddress();
+  }, []);
+
+  // Set first address as default when list updates
+  useEffect(() => {
+    if (addresses.length > 0 && !selectedAddress) {
+      setSelectedAddress(addresses[0]);
+    }
+  }, [addresses]);
+
+  // Delete Address
+  const handleDeleteAddress = async (addressId) => {
+    try {
+      if (!userUid) {
+        console.error("User UID is undefined.");
+        return;
+      }
+      if (!addressId || typeof addressId !== "string") {
+        console.error("Invalid Address ID:", addressId);
+        return;
+      }
+
+      console.log("Deleting address with ID:", addressId);
+
+      const addressDocRef = doc(
+        db,
+        "users",
+        userUid,
+        "userAddresses",
+        addressId
+      );
+      await deleteDoc(addressDocRef); // Delete from Firestore
+
+      // Refresh addresses after deletion
+      fetchAddress();
+    } catch (error) {
+      console.error("Error deleting address:", error);
+      alert("Failed to delete address. Please try again.");
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -423,7 +493,7 @@ const address = () => {
         <ScrollView>
           {step == 1 && (
             <View>
-              {/* Map  over all the addresses */}
+              {/* Add Address Section */}
               <Pressable
                 style={{
                   flexDirection: "row",
@@ -434,27 +504,26 @@ const address = () => {
               >
                 <AntDesign name="plus" size={24} color="black" />
                 <Pressable onPress={() => router.push("tabs/home/add")}>
-                  <Text style={{ fontSize: 16, fontWeight: 500 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "500" }}>
                     Add address
                   </Text>
                 </Pressable>
               </Pressable>
 
               <View>
-                {/* map over the addresses */}
+                {/* Map Over Addresses */}
                 {addresses?.map((item, index) => (
                   <Pressable
-                    onPress={() => setSelectedAdress(item)}
+                    onPress={() => setSelectedAddress(item)} // Set selected address
                     key={index}
                     style={{
                       backgroundColor: "white",
                       padding: 10,
                       marginVertical: 10,
                       borderRadius: 5,
-                      borderWidth: 1,
-                      borderWidth: selectedAdress === item ? 2 : 1,
+                      borderWidth: selectedAddress === item ? 2 : 1,
                       borderColor:
-                        selectedAdress === item ? "#0066b2" : "white",
+                        selectedAddress === item ? "#0066b2" : "white",
                     }}
                   >
                     <View
@@ -464,11 +533,12 @@ const address = () => {
                         justifyContent: "space-between",
                       }}
                     >
+                      {/* Address Title & Flag */}
                       <View
                         style={{
                           flexDirection: "row",
                           alignItems: "center",
-                          gap: 10,
+                          gap: 5,
                         }}
                       >
                         <Ionicons
@@ -479,11 +549,23 @@ const address = () => {
                         <Text style={{ fontSize: 17, fontWeight: "500" }}>
                           Home
                         </Text>
+
+                        {/* Flag Icon - Only on Selected Address */}
+                        {selectedAddress === item && (
+                          <FontAwesome name="flag" size={20} color="#b1b4e6" />
+                        )}
                       </View>
+
                       <Text>{item.addressLine}</Text>
-                      {selectedAdress === item && (
-                        <FontAwesome name="flag-o" size={24} color="black" />
-                      )}
+
+                      {/* Delete Address Icon */}
+                      <Pressable onPress={() => handleDeleteAddress(item.id)}>
+                        <Ionicons
+                          name="trash-outline"
+                          size={24}
+                          color="black"
+                        />
+                      </Pressable>
                     </View>
 
                     <Text
@@ -743,21 +825,45 @@ const address = () => {
                         {item?.item.price * item?.item.quantity}
                       </Text>
                     </View>
-
-                    {/* <Pressable>
-                      <AntDesign name="pluscircleo" size={24} color="#89CFF0" />
-                    </Pressable> */}
                   </Pressable>
                 ))}
               </View>
+
+              {/* First Container */}
               <View
                 style={{
                   backgroundColor: "#dbddff",
                   padding: 10,
-                  borderBottomLeftRadius: 6,
-                  borderBottomRightRadius: 6,
+                  borderRadius: 6,
+                  marginBottom: 10,
                 }}
               >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginVertical: 10,
+                  }}
+                >
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    Choose Scent
+                  </Text>
+
+                  <Picker
+                    selectedValue={selectedScent}
+                    style={{ height: 50, width: 150 }}
+                    onValueChange={(itemValue) => handleScentChange(itemValue)}
+                  >
+                    <Picker.Item label="Neutral- ₹20" value="50" />
+                    <Picker.Item label="Lavender - ₹50" value="50" />
+                    <Picker.Item label="Rose - ₹40" value="40" />
+                    <Picker.Item label="Jasmine - ₹45" value="45" />
+                    <Picker.Item label="Sandalwood - ₹60" value="60" />
+                    <Picker.Item label="Lemon - ₹35" value="35" />
+                  </Picker>
+                </View>
+
                 <View
                   style={{
                     flexDirection: "row",
@@ -770,7 +876,7 @@ const address = () => {
                     Total Amount
                   </Text>
                   <Text style={{ color: "black", fontWeight: "500" }}>
-                    ₹ {total}
+                    ₹ {total + parseFloat(selectedScent)}
                   </Text>
                 </View>
 
@@ -782,10 +888,101 @@ const address = () => {
                     marginVertical: 10,
                   }}
                 >
+                  {/* Left Side: Promo Code Label */}
                   <Text style={{ color: "black", fontWeight: "500" }}>
                     Promo Code
                   </Text>
-                  <Text style={{ color: "black", fontWeight: "500" }}>₹ 0</Text>
+
+                  {/* Right Side: Input Box & Apply Button */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <TextInput
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "transparent",
+                        borderRadius: 5,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        width: 120,
+                        textAlign: "center",
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        color: "black",
+                      }}
+                      placeholder="Enter Code"
+                      placeholderTextColor="gray"
+                      value={promoCode}
+                      onChangeText={(text) => setPromoCode(text.toUpperCase())}
+                    />
+
+                    <Pressable
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.5)",
+                        paddingVertical: 8,
+                        paddingHorizontal: 10,
+                        width: 80,
+                        borderRadius: 5,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onPress={applyPromoCode}
+                    >
+                      <Text
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          fontSize: 14,
+                        }}
+                      >
+                        Apply
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginVertical: 10,
+                  }}
+                >
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    Discount
+                  </Text>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ {discount.toFixed(2)}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Second Container */}
+              <View
+                style={{
+                  backgroundColor: "#dbddff",
+                  padding: 10,
+                  borderRadius: 6,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginVertical: 10,
+                  }}
+                >
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    Taxes and Charges
+                  </Text>
+                  <Text style={{ color: "black", fontWeight: "500" }}>
+                    ₹ 150
+                  </Text>
                 </View>
 
                 <View
@@ -816,63 +1013,14 @@ const address = () => {
                     Total Payable
                   </Text>
                   <Text style={{ color: "black", fontWeight: "500" }}>
-                    ₹ {total + 25}
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  backgroundColor: "#dbddff",
-                  padding: 10,
-                  marginVertical: 10,
-                  borderRadius: 6,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginVertical: 10,
-                  }}
-                >
-                  <Text style={{ color: "black", fontWeight: "500" }}>
-                    TOTAL AMOUNT
-                  </Text>
-                  <Text style={{ color: "black", fontWeight: "500" }}>
-                    ₹ {total}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginVertical: 10,
-                  }}
-                >
-                  <Text style={{ color: "black", fontWeight: "500" }}>
-                    TAXES AND CHARGES
-                  </Text>
-                  <Text style={{ color: "black", fontWeight: "500" }}>
-                    ₹ 150
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginVertical: 10,
-                  }}
-                >
-                  <Text style={{ color: "black", fontWeight: "500" }}>
-                    TOTAL PAYABLE
-                  </Text>
-                  <Text style={{ color: "black", fontWeight: "500" }}>
-                    ₹ {total + 25 + 150}
+                    ₹{" "}
+                    {(
+                      total +
+                      parseFloat(selectedScent) -
+                      discount +
+                      25 +
+                      150
+                    ).toFixed(2)}
                   </Text>
                 </View>
               </View>
