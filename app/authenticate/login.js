@@ -14,10 +14,10 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, db, doc, updateDoc } from "../../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const login = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -42,35 +42,31 @@ const login = () => {
         throw new Error("Email and password are required.");
       }
 
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       if (!user.emailVerified) {
         Alert.alert(
           "Email Not Verified",
-          "Please verify your email before logging in. Check your inbox for the verification link."
+          "Please verify your email before logging in."
         );
         return;
       }
 
-      // ✅ If email is verified, update Firestore
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, { verified: true });
+      // ✅ Update Firestore for verification status
+      await updateDoc(doc(db, "users", user.uid), { verified: true });
 
-      // ✅ Store token in AsyncStorage
+      // ✅ Store token
       await AsyncStorage.setItem("auth", user.uid);
 
-      // ✅ Navigate to home page
+      // ✅ Navigate to home
       router.replace("/tabs/home");
     } catch (error) {
       console.error("Login error:", error.message);
-      Alert.alert("Login Failed", error.message);
+      Alert.alert("Login Failed", "Invalid email or password. Please try again.");
     }
   };
+
 
   return (
     <SafeAreaView
@@ -176,7 +172,7 @@ const login = () => {
           </View>
         </View>
 
-        <View
+        {/* <View
           style={{
             marginTop: 12,
             flexDirection: "row",
@@ -188,7 +184,7 @@ const login = () => {
           <Text style={{ color: "#007FFF", fontWeight: "500" }}>
             Forgot Password
           </Text>
-        </View>
+        </View> */}
 
         <View style={{ marginTop: 50 }} />
 
@@ -233,6 +229,6 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;
 
 const styles = StyleSheet.create({});
