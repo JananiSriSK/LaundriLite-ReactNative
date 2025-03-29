@@ -127,14 +127,20 @@ const Index = () => {
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Quick Help</Text>
-            <Text style={styles.modalText}>
-              <Ionicons name="mail-outline" size={20} color="black" /> Email:
-              support@laundryapp.com
-            </Text>
-            <Text style={styles.modalText}>
-              <Ionicons name="call-outline" size={20} color="black" /> Contact:
-              +91 98765 43210
-            </Text>
+            <View style={styles.modalTextContainer}>
+              <Ionicons name="mail" size={20} color="#b1b4e6" />
+              <Text style={styles.modalText}>
+                Email: support@laundryapp.com
+              </Text>
+            </View>
+
+            <View style={styles.modalTextContainer}>
+              <Ionicons name="call" size={20} color="#b1b4e6" />
+              <Text style={styles.modalText}>
+                {" "}
+                <Text style={styles.boldText}>Contact:</Text> +91 98765 43210
+              </Text>
+            </View>
 
             <Pressable
               onPress={() => setHelpModalVisible(false)}
@@ -198,9 +204,7 @@ const Index = () => {
         </View>
       </Pressable>
 
-      {/* Additional Features Section */}
       <View style={styles.featuresSection}>
-        {/* Affordable Prices */}
         <Pressable onPress={() => router.push("/tabs/basket/select")}>
           <View style={styles.priceCard}>
             <View>
@@ -355,10 +359,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  modalText: {
-    fontSize: 14,
-    marginBottom: 5,
+  modalTextContainer: {
+    flexDirection: "row",
+    alignItems: "center", // Perfectly aligns icon & text
+    gap: 8, // Adds spacing between icon and text
   },
+  icon: {
+    marginBottom: -2, // Slightly lifts the icon to match text alignment
+  },
+  modalText: {
+    fontSize: 16,
+    lineHeight: 22, // Ensures text aligns well with the icon
+  },
+
   closeButton: {
     marginTop: 15,
     backgroundColor: "#dbddff",
