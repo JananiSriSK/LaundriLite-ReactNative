@@ -387,18 +387,6 @@ const select = () => {
       name: "Pet leash",
       price: 300,
     },
-    // {
-    //   id: "60",
-    //   image: "https://example.com/images/pet_laundry_detergent.png",
-    //   name: "Pet-Safe Laundry Detergent",
-    //   price: 300,
-    // },
-    // {
-    //   id: "61",
-    //   image: "https://example.com/images/pet_laundry_booster.png",
-    //   name: "Pet Laundry Odor Eliminator",
-    //   price: 350,
-    // },
   ];
 
   return (
@@ -416,7 +404,7 @@ const select = () => {
               style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
             >
               <Pressable
-                onPress={() => router.push("/tabs/home/")}
+                onPress={() => router.push("/tabs/home")}
                 style={{
                   width: 30,
                   height: 30,
@@ -430,10 +418,6 @@ const select = () => {
                 Laundry list
               </Text>
             </View>
-            {/* <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Feather name="search" size={24} color="black" />
-            <Octicons name="three-bars" size={24} color="black" />
-          </View> */}
           </View>
         </View>
 
@@ -574,7 +558,6 @@ const select = () => {
                 style={{
                   padding: 10,
                   backgroundColor: "white",
-                  width: 70,
                   backgroundColor: option == "Women" ? "#0066b2" : "white",
                   borderRadius: 4,
                 }}

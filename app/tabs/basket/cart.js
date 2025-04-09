@@ -17,7 +17,7 @@ const cart = () => {
   const cart = useSelector((state) => state.cart.cart);
   const total = cart
     ?.map((item) => item.item.price * item.item.quantity)
-    
+
     .reduce((prev, curr) => prev + curr, 0);
   return (
     <ScrollView>
@@ -127,18 +127,6 @@ const cart = () => {
           marginTop: 30,
         }}
       >
-        {/* <Pressable
-          style={{
-            backgroundColor: "#d0d0d0",
-            padding: 15,
-            borderRadius: 5,
-            flex: 1,
-          }}
-        >
-          <Text style={{ textAlign: "center", fontWeight: "500" }}>
-            Empty Basket
-          </Text>
-        </Pressable> */}
         <Pressable
           onPress={() => router.push("/tabs/home/address")}
           style={{

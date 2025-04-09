@@ -10,14 +10,14 @@ import {
   Modal,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { auth, db } from "../../../firebase"; // ✅ Import Firestore
+import { auth, db } from "../../../firebase.js"; // ✅ Import Firestore
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore"; // ✅ Firestore functions
 import Octicons from "@expo/vector-icons/Octicons";
 import { Ionicons, MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import SwiperView from "./SwiperView.js";
 
-const Index = () => {
+const index = () => {
   const router = useRouter();
   const [userName, setUserName] = useState("");
   const [helpModalVisible, setHelpModalVisible] = useState(false);
@@ -127,19 +127,29 @@ const Index = () => {
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Quick Help</Text>
-            <View style={styles.modalTextContainer}>
-              <Ionicons name="mail" size={20} color="#b1b4e6" />
+
+            {/* Email Row */}
+            <View style={[styles.modalTextRow]}>
+              <Ionicons
+                name="mail-outline"
+                size={20}
+                color="black"
+                style={styles.iconStyle}
+              />
               <Text style={styles.modalText}>
                 Email: support@laundryapp.com
               </Text>
             </View>
 
-            <View style={styles.modalTextContainer}>
-              <Ionicons name="call" size={20} color="#b1b4e6" />
-              <Text style={styles.modalText}>
-                {" "}
-                <Text style={styles.boldText}>Contact:</Text> +91 98765 43210
-              </Text>
+            {/* Contact Row */}
+            <View style={[styles.modalTextRow]}>
+              <Ionicons
+                name="call-outline"
+                size={20}
+                color="black"
+                style={styles.iconStyle}
+              />
+              <Text style={styles.modalText}>Contact: +91 98765 43210</Text>
             </View>
 
             <Pressable
@@ -204,7 +214,9 @@ const Index = () => {
         </View>
       </Pressable>
 
+      {/* Additional Features Section */}
       <View style={styles.featuresSection}>
+        {/* Affordable Prices */}
         <Pressable onPress={() => router.push("/tabs/basket/select")}>
           <View style={styles.priceCard}>
             <View>
@@ -236,7 +248,7 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default index;
 
 // Styles
 const styles = StyleSheet.create({
@@ -359,19 +371,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  modalTextContainer: {
-    flexDirection: "row",
-    alignItems: "center", // Perfectly aligns icon & text
-    gap: 8, // Adds spacing between icon and text
-  },
-  icon: {
-    marginBottom: -2, // Slightly lifts the icon to match text alignment
-  },
   modalText: {
-    fontSize: 16,
-    lineHeight: 22, // Ensures text aligns well with the icon
+    fontSize: 14,
+    marginBottom: 5,
   },
-
   closeButton: {
     marginTop: 15,
     backgroundColor: "#dbddff",
@@ -381,5 +384,19 @@ const styles = StyleSheet.create({
   closeText: {
     color: "black",
     fontSize: 14,
+  },
+  modalTextRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 6,
+  },
+
+  iconStyle: {
+    marginRight: 8,
+  },
+
+  modalText: {
+    fontSize: 16,
+    color: "#444",
   },
 });

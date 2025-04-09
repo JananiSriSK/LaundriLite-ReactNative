@@ -8,18 +8,14 @@ import {
   ScrollView,
   Modal,
 } from "react-native";
-import { getDocs, collection, query } from "firebase/firestore";
+import { collection, query, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  FontAwesome,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import * as Print from "expo-print";
 import { shareAsync } from "expo-sharing";
 
-const Index = () => {
+const index = () => {
   const router = useRouter();
   const userUid = auth?.currentUser?.uid;
   const [orders, setOrders] = useState([]);
@@ -27,25 +23,28 @@ const Index = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const ordersCollectionRef = collection(db, "users", userUid, "orders");
-        const ordersQuery = query(ordersCollectionRef);
-        const querySnapshot = await getDocs(ordersQuery);
+    if (!userUid) {
+      console.error("User UID not available");
+      return;
+    }
 
-        const fetchedOrders = [];
-        querySnapshot.forEach((doc) => {
-          fetchedOrders.push({ id: doc.id, ...doc.data() });
-        });
+    const ordersCollectionRef = collection(db, "users", userUid, "orders");
+    const ordersQuery = query(ordersCollectionRef);
 
-        setOrders(fetchedOrders);
-      } catch (error) {
-        console.log("Error fetching orders:", error);
-      }
-    };
+    // ✅ Set up real-time listener for order updates
+    const unsubscribe = onSnapshot(ordersQuery, (querySnapshot) => {
+      const fetchedOrders = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    fetchOrders();
-  }, []);
+      console.log("Orders Updated:", fetchedOrders);
+      setOrders(fetchedOrders);
+    });
+
+    // Cleanup listener when component unmounts
+    return () => unsubscribe();
+  }, [userUid]); // Runs when userUid changes
 
   // Open Order Summary Popup
   const openOrderSummary = (order) => {
@@ -57,17 +56,45 @@ const Index = () => {
   const generatePDF = async () => {
     if (!selectedOrder) return;
 
+    const {
+      address,
+      pickupDate,
+      pickuptime,
+      deliveryDate,
+      deliveryTime,
+      totalPayable,
+    } = selectedOrder;
+
+    console.log("Address Data:", address);
+
+    const name = address?.name ?? "N/A";
+    const mobile = address?.mobile ?? "N/A";
+
+    const addressParts = [
+      address?.houseNo,
+      address?.landmark,
+      address?.city,
+      address?.postalCode,
+    ].filter(Boolean);
+
+    const formattedAddress =
+      addressParts.length > 0 ? addressParts.join(", ") : "N/A";
+
     const htmlContent = `
       <html>
-        <body style="font-family: Arial, sans-serif; padding: 20px;">
+        <body style="font-family: Arial, sans-serif; padding: 30px;">
           <h2 style="text-align: center;">Order Summary</h2>
+          <div style= "padding: 20px;">
           <p><strong>Order ID:</strong> ${selectedOrder.id}</p>
-          <p><strong>Name:</strong> ${selectedOrder.name}</p>
-          <p><strong>Mobile:</strong> ${selectedOrder.mobile}</p>
-          <p><strong>Address:</strong> ${selectedOrder.address.houseNo}, ${selectedOrder.address.landmark}, ${selectedOrder.address.city}</p>
-          <p><strong>Pickup Time:</strong> ${selectedOrder.pickuptime}</p>
-          <p><strong>Delivery Time:</strong> ${selectedOrder.deliveryTime}</p>
-          <p><strong>Order Total:</strong> ₹${selectedOrder.total}</p>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Mobile:</strong> ${mobile}</p>
+          <p><strong>Address:</strong> ${formattedAddress}</p>
+          <p><strong>Pickup Date:</strong> ${pickupDate}</p>
+          <p><strong>Pickup Time:</strong> ${pickuptime}</p>
+          <p><strong>Delivery Date:</strong> ${deliveryDate}</p>
+          <p><strong>Delivery Time:</strong> ${deliveryTime}</p>
+          <p><strong>Order Total:</strong> ₹${totalPayable || "0.00"}</p>
+          </div>
         </body>
       </html>
     `;
@@ -93,7 +120,7 @@ const Index = () => {
             }}
           >
             <Ionicons
-              onPress={() => router.push("/tabs/home/")}
+              onPress={() => router.push("/tabs/home")}
               name="arrow-back"
               size={24}
               color="black"
@@ -109,32 +136,51 @@ const Index = () => {
       <ScrollView contentContainerStyle={{ padding: 12 }}>
         {orders.map((order, index) => (
           <Pressable key={index} style={styles.orderContainer}>
+            {/* Light Green Header */}
             <View style={styles.orderHeader}>
-              <View>
-                <Text style={styles.label}>Order ID</Text>
-                <Text style={styles.value}>{order.id}</Text>
-              </View>
-              <View>
-                <Text style={styles.label}>Payment</Text>
-                <Text style={styles.value}>Cash on Delivery</Text>
-              </View>
+              <Text style={styles.label}>Payment</Text>
+              <Text style={styles.value}>Cash on Delivery</Text>
             </View>
 
             <View style={styles.orderBody}>
               <View style={{ flexDirection: "row", marginTop: 10 }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.sectionTitle}>Pickup</Text>
+                  <Text style={styles.sectionTitle}>Pickup Date</Text>
+                  <Text style={styles.value}>{order.pickupDate}</Text>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.sectionTitle}>Delivery Date</Text>
+                  <Text style={styles.value}>{order.deliveryDate}</Text>
+                </View>
+              </View>
+
+              <View style={{ flexDirection: "row", marginTop: 10 }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.sectionTitle}>Pickup Time</Text>
                   <Text style={styles.value}>{order.pickuptime}</Text>
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.sectionTitle}>Delivery</Text>
+                  <Text style={styles.sectionTitle}>Delivery Time</Text>
                   <Text style={styles.value}>{order.deliveryTime}</Text>
                 </View>
               </View>
+
+              {/* Display Total Payable */}
+              <View style={{ flexDirection: "row", marginTop: 10 }}>
+                <Text style={styles.sectionTitle}>Total Payable:</Text>
+                <Text style={styles.value}>
+                  {" "}
+                  ₹ {order.totalPayable.toFixed(2)}
+                </Text>
+              </View>
             </View>
 
+            {/* Order Summary Button */}
             <View style={styles.orderActions}>
-              <Pressable onPress={() => openOrderSummary(order)}>
+              <Pressable
+                onPress={() => openOrderSummary(order)}
+                style={styles.summaryButton}
+              >
                 <MaterialCommunityIcons
                   name="note-outline"
                   size={24}
@@ -163,26 +209,24 @@ const Index = () => {
                 <Text style={styles.bold}>Order ID:</Text> {selectedOrder.id}
               </Text>
               <Text style={styles.modalText}>
-                <Text style={styles.bold}>Name:</Text> {selectedOrder.name}
+                <Text style={styles.bold}>Pickup Date:</Text>{" "}
+                {selectedOrder.pickupDate}
               </Text>
               <Text style={styles.modalText}>
-                <Text style={styles.bold}>Mobile:</Text> {selectedOrder.mobile}
-              </Text>
-              <Text style={styles.modalText}>
-                <Text style={styles.bold}>Address:</Text>{" "}
-                {selectedOrder.address.houseNo},{" "}
-                {selectedOrder.address.landmark}, {selectedOrder.address.city}
-              </Text>
-              <Text style={styles.modalText}>
-                <Text style={styles.bold}>Pickup:</Text>{" "}
+                <Text style={styles.bold}>Pickup Time:</Text>{" "}
                 {selectedOrder.pickuptime}
               </Text>
               <Text style={styles.modalText}>
-                <Text style={styles.bold}>Delivery:</Text>{" "}
+                <Text style={styles.bold}>Delivery Date:</Text>{" "}
+                {selectedOrder.deliveryDate}
+              </Text>
+              <Text style={styles.modalText}>
+                <Text style={styles.bold}>Delivery Time:</Text>{" "}
                 {selectedOrder.deliveryTime}
               </Text>
               <Text style={styles.modalText}>
-                <Text style={styles.bold}>Total:</Text> ₹{selectedOrder.total}
+                <Text style={styles.bold}>Total Payable:</Text> ₹{" "}
+                {selectedOrder.totalPayable.toFixed(2)}
               </Text>
 
               <Pressable style={styles.downloadButton} onPress={generatePDF}>
@@ -195,6 +239,8 @@ const Index = () => {
     </View>
   );
 };
+
+export default index;
 
 const styles = StyleSheet.create({
   orderContainer: {
@@ -209,34 +255,84 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   orderBody: { padding: 10 },
-  address: { fontSize: 14, fontWeight: "500", color: "gray" },
-  orderActions: { alignItems: "center", marginBottom: 10 },
-  actionText: { textAlign: "center", fontSize: 13, fontWeight: "500" },
   modalBackground: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
+  modalContainer: { backgroundColor: "white", padding: 20, borderRadius: 10 },
+  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dim background
+  },
   modalContainer: {
     backgroundColor: "white",
     padding: 20,
-    borderRadius: 10,
-    width: "80%",
+    borderRadius: 12,
+    width: "85%",
+    elevation: 5, // Shadow for Android
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
-  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
-  modalText: { fontSize: 14, marginBottom: 5 },
-  bold: { fontWeight: "bold" },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+    color: "#333",
+  },
+  modalText: {
+    fontSize: 16,
+    marginVertical: 6,
+    color: "#444",
+  },
+  bold: {
+    fontWeight: "bold",
+    color: "#222",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    padding: 6,
+  },
   downloadButton: {
-    backgroundColor: "#dbddff",
-    padding: 10,
-    borderRadius: 5,
-    marginVertical: 10,
+    backgroundColor: "#5C67F2",
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 15,
     alignItems: "center",
   },
-  downloadText: { color: "black", fontSize: 14 },
-  closeText: { textAlign: "center", color: "black" },
-  closeButton: { position: "absolute", top: 10, right: 10, zIndex: 1 },
+  downloadText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  orderActions: {
+    alignItems: "flex-end",
+    marginTop: 10,
+    paddingBottom: 10,
+  },
+  summaryButton: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  actionText: {
+    fontSize: 14,
+    marginLeft: 5,
+    color: "#5C67F2",
+    fontWeight: "bold",
+  },
+  sectionTitle: {
+    fontWeight: "bold",
+  },
+  label: {
+    fontWeight: "bold",
+  },
 });
-
-export default Index;

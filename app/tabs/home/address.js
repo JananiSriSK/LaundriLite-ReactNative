@@ -7,14 +7,13 @@ import {
   View,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import React, { useState, useEffect } from "react";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { Ionicons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import { useRouter } from "expo-router";
@@ -22,15 +21,17 @@ import {
   addDoc,
   collection,
   getDocs,
-  query,
   doc,
   deleteDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { cleanCart } from "../../../redux/CartReducer";
+// import { getAuth } from "firebase/auth";
 
-const address = () => {
+// import sendConfirmationEmail from "../../utils/emailService";
+
+const Address = () => {
   const userUid = auth?.currentUser.uid;
   const router = useRouter();
   const dispatch = useDispatch();
@@ -39,14 +40,13 @@ const address = () => {
     ?.map((item) => item.item.price * item.item.quantity)
     .reduce((prev, curr) => prev + curr, 0);
   const [step, setStep] = useState(1);
-  const [selectedScent, setSelectedScent] = useState("0");
+  const [selectedScent, setSelectedScent] = useState("20");
   const [currentDate, setCurrentDate] = useState(moment());
   const [deliveryDate, setDeliveryDate] = useState(moment());
   const [selectedTime, setSelectedTime] = useState(null);
   const [selectedDeliveryTime, setSelectedDeliveryTime] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const [selectedDate, setSelectedDate] = useState(moment());
-  const [selectedAdress, setSelectedAdress] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState(addresses[0] || null);
@@ -66,38 +66,152 @@ const address = () => {
   console.log("userId", userUid);
 
   const handleNext = () => {
+    // Step 2: Pickup time must be selected
+    if (step === 2 && !selectedTime) {
+      Alert.alert(
+        "Missing Pickup Time",
+        "Please select a pickup time before proceeding."
+      );
+      return;
+    }
+
+    // Step 3: Delivery slot must be selected
+    if (step === 3 && !selectedDeliveryTime) {
+      Alert.alert(
+        "Missing Delivery Time",
+        "Please select a delivery time slot before proceeding."
+      );
+      return;
+    }
+
     setStep((prevStep) => {
       const nextStep = prevStep + 1;
       console.log("next step", nextStep);
 
-      //check if next step is equal to 4
-      if (nextStep == 5) {
-        // call the place order function
+      // If it's the last step (e.g., 5), place the order
+      if (nextStep === 5) {
         placeOrder();
       }
 
       return nextStep;
     });
   };
-  console.log(step);
+  // const placeOrder = async () => {
+  //   try {
+  //     const orderRef = await saveOrderToDB(); // assumes this returns an order ID or reference
+
+  //     const auth = getAuth();
+  //     const currentUser = auth.currentUser;
+  //     const userEmail = currentUser?.email;
+
+  //     if (userEmail) {
+  //       await sendConfirmationEmail(userEmail, {
+  //         id: orderRef.id,
+  //         pickupDate: selectedDate.format("YYYY-MM-DD"),
+  //         deliveryDate: deliveryDate.format("YYYY-MM-DD"),
+  //       });
+  //     }
+
+  //     // Slight delay to make sure async ops finish smoothly
+  //     await new Promise((resolve) => setTimeout(resolve, 100));
+
+  //     Alert.alert("Order Placed", "Your order was successful!", [
+  //       {
+  //         text: "OK",
+  //         onPress: () => {
+  //           dispatch(cleanCart());
+  //           router.replace("/tabs/orders");
+  //         },
+  //       },
+  //     ]);
+  //   } catch (error) {
+  //     console.error("Order error:", error);
+  //     Alert.alert("Error", "Order failed. Please try again.");
+  //   }
+  // };
 
   const placeOrder = async () => {
-    dispatch(cleanCart());
+    // Debugging checkpoint 1
+    console.log("1. Starting placeOrder");
 
-    router.replace("/tabs/orders");
+    try {
+      // Debugging checkpoint 2
+      console.log("2. Attempting to save to DB");
 
-    const ordersCollectionRef = collection(db, "users", userUid, "orders");
+      await saveOrderToDB();
 
-    const orderDocRef = await addDoc(ordersCollectionRef, {
-      items: { ...cart },
-      address: selectedAdress,
-      pickuptime: `${selectedTime.startTime} - ${selectedTime.endTime}`,
-      deliveryTime: `${selectedDeliveryTime.startTime} - ${selectedDeliveryTime.endTime}`,
-    });
+      // Debugging checkpoint 3
+      console.log("3. DB save successful, showing alert");
 
-    console.log("order placed successfully!", orderDocRef.id);
+      // Force UI thread to settle before showing alert
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      Alert.alert(
+        "Order Placed",
+        "Your order was successful!",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              // Debugging checkpoint 4
+              console.log("4. Alert OK pressed - cleaning cart");
+              dispatch(cleanCart());
+
+              // Debugging checkpoint 5
+              console.log("5. Navigating to orders");
+              router.replace("/tabs/orders");
+            },
+          },
+        ],
+        {
+          cancelable: false,
+          onDismiss: () => {
+            // Debugging checkpoint 6
+            console.log("6. Alert was dismissed unexpectedly");
+          },
+        }
+      );
+
+      // Debugging checkpoint 7
+      console.log("7. Alert shown (this should appear before navigation)");
+    } catch (error) {
+      // Debugging checkpoint 8
+      console.error("8. Order error:", error);
+      Alert.alert("Error", "Order failed. Please try again.");
+    }
   };
 
+  // Add these debugging logs to your save function too
+  const saveOrderToDB = async () => {
+    console.log("DB_1. Starting save");
+    const totalPayable = (
+      total +
+      parseFloat(selectedScent || 0) -
+      discount +
+      25 + // Delivery
+      150
+    ) // Taxes
+      .toFixed(2);
+
+    console.log("DB_2. Creating document");
+    const orderRef = await addDoc(collection(db, "users", userUid, "orders"), {
+      items: [...cart],
+      address: selectedAddress,
+      pickuptime: selectedTime
+        ? `${selectedTime.startTime} - ${selectedTime.endTime}`
+        : "Not specified",
+      deliveryTime: selectedDeliveryTime
+        ? `${selectedDeliveryTime.startTime} - ${selectedDeliveryTime.endTime}`
+        : "Not specified",
+      pickupDate: selectedDate.format("YYYY-MM-DD"),
+      deliveryDate: deliveryDate.format("YYYY-MM-DD"),
+      totalPayable: parseFloat(totalPayable),
+      createdAt: new Date(),
+    });
+
+    console.log("DB_3. Document created with ID:", orderRef.id);
+    return orderRef;
+  };
   const getNext6Days = () => {
     const nextDays = [];
     for (let i = 0; i < 4; i++) {
@@ -408,7 +522,7 @@ const address = () => {
           }}
         >
           <Pressable
-            onPress={() => router.push("/tabs/home/")}
+            onPress={() => router.push("/tabs/home")}
             style={{
               width: 30,
               height: 30,
@@ -423,72 +537,7 @@ const address = () => {
           Choose your address
         </Text>
       </View>
-      {/* <View
-        style={{
-          padding: 10,
-          backgroundColor: "white",
-          height: 100,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 20,
-        }}
-      >
-        <Pressable
-          disabled={step === 1}
-          onPress={handleBack}
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 15,
-            backgroundColor: "#A0A0A0",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Ionicons name="chevron-back" size={24} color="white" />
-        </Pressable>
 
-        <Pressable
-          style={{
-            width: 54,
-            height: 54,
-            borderRadius: 27,
-            backgroundColor: "#F5F5F5",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Ionicons name="location" size={24} color="black" />
-        </Pressable>
-
-        <Pressable
-          style={{
-            width: 54,
-            height: 54,
-            borderRadius: 27,
-            backgroundColor: "#F5F5F5",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Entypo name="back-in-time" size={24} color="black" />
-        </Pressable>
-
-        <Pressable
-          onPress={handleNext}
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 15,
-            backgroundColor: "#A0A0A0",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Entypo name="chevron-right" size={24} color="white" />
-        </Pressable>
-      </View> */}
       <View style={{ backgroundColor: "transparent", flex: 1, padding: 10 }}>
         <ScrollView>
           {step == 1 && (
@@ -855,7 +904,7 @@ const address = () => {
                     style={{ height: 50, width: 150 }}
                     onValueChange={(itemValue) => handleScentChange(itemValue)}
                   >
-                    <Picker.Item label="Neutral- ₹20" value="50" />
+                    <Picker.Item label="Neutral - ₹20" value="20" />
                     <Picker.Item label="Lavender - ₹50" value="50" />
                     <Picker.Item label="Rose - ₹40" value="40" />
                     <Picker.Item label="Jasmine - ₹45" value="45" />
@@ -1104,6 +1153,6 @@ const address = () => {
   );
 };
 
-export default address;
+export default Address;
 
 const styles = StyleSheet.create({});

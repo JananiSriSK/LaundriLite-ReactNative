@@ -21,7 +21,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 
-const Register = () => {
+const register = () => {
   const [name, setName] = useState(""); // ✅ Add name state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -112,10 +112,7 @@ const Register = () => {
           </View>
 
           <View>
-            
-          <View 
-            style={styles.inputField}
-            >
+            <View style={styles.inputField}>
               <MaterialIcons
                 style={{ marginLeft: 8 }}
                 name="person"
@@ -136,9 +133,7 @@ const Register = () => {
               />
             </View>
 
-            <View 
-            style={styles.inputField}
-            >
+            <View style={styles.inputField}>
               <MaterialIcons
                 style={{ marginLeft: 8 }}
                 name="email"
@@ -159,9 +154,7 @@ const Register = () => {
               />
             </View>
 
-            <View 
-            style={styles.inputField}
-            >
+            <View style={styles.inputField}>
               <Fontisto
                 name="locked"
                 size={24}
@@ -183,9 +176,7 @@ const Register = () => {
               />
             </View>
 
-            <View 
-            style={styles.inputField}
-            >
+            <View style={styles.inputField}>
               <Fontisto
                 name="locked"
                 size={22}
@@ -227,7 +218,7 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default register;
 
 const styles = StyleSheet.create({
   button: {
@@ -246,13 +237,12 @@ const styles = StyleSheet.create({
   },
 
   inputField: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 5,
-      backgroundColor: "#dbddff",
-      paddingVertical: 1,
-      borderRadius: 5,
-      marginTop: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 1,
+    borderRadius: 5,
+    marginTop: 20,
   },
-
 });
